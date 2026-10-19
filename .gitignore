@@ -1,0 +1,29 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Test and coverage output
+TestResults/
+coverage/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Publish and packaging output
+publish/
+AppPackages/
+BundleArtifacts/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp

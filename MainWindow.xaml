@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="RealmeBuds.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Windows-style title bar: Mica shows through, caption buttons sit on the right -->
+        <Grid x:Name="AppTitleBar" Height="40">
+            <TextBlock Text="Realme Buds" Style="{StaticResource CaptionTextBlockStyle}"
+                       VerticalAlignment="Center" Margin="16,0,0,0"/>
+        </Grid>
+
+    <Grid Grid.Row="1" Padding="24,8,24,24" RowSpacing="16">
+        <Grid.Resources>
+            <Style x:Key="Card" TargetType="Border">
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+                <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="16"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header: title, connection state, settings -->
+        <Grid Grid.Row="0" ColumnSpacing="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="DeviceTitle" Text="Realme Buds" Style="{StaticResource TitleTextBlockStyle}"
+                       VerticalAlignment="Center"/>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <Ellipse x:Name="ConnDot" Width="10" Height="10" Fill="Gray"/>
+                <TextBlock x:Name="ConnText" Text="Disconnected" Opacity="0.8"/>
+            </StackPanel>
+
+            <Button x:Name="SettingsBtn" Grid.Column="2" ToolTipService.ToolTip="Connection settings">
+                <FontIcon Glyph="&#xE713;"/>
+                <Button.Flyout>
+                    <Flyout x:Name="SettingsFlyout" Placement="BottomEdgeAlignedRight"
+                            Opened="SettingsFlyout_Opened" Closed="SettingsFlyout_Closed">
+                        <StackPanel Width="380" Spacing="14">
+                            <TextBlock Text="Connection settings" Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox x:Name="DeviceBox" Header="Paired device" HorizontalAlignment="Stretch"
+                                          DisplayMemberPath="Label" PlaceholderText="No paired devices found"/>
+                                <Button x:Name="RefreshDevicesBtn" Grid.Column="1" VerticalAlignment="Bottom"
+                                        Click="RefreshDevices_Click"
+                                        ToolTipService.ToolTip="Refresh devices and COM ports">
+                                    <FontIcon Glyph="&#xE72C;"/>
+                                </Button>
+                            </Grid>
+
+                            <ComboBox x:Name="PortBox" Header="Connection" HorizontalAlignment="Stretch"
+                                      SelectedIndex="0"/>
+
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <NumberBox x:Name="ChannelBox" Header="RFCOMM channel (0 = auto)"
+                                           Value="0" Minimum="0" Maximum="30"
+                                           SpinButtonPlacementMode="Compact"/>
+                                <ComboBox x:Name="LenModeBox" Grid.Column="1" Header="Frame length mode"
+                                          HorizontalAlignment="Stretch" SelectedIndex="0">
+                                    <ComboBoxItem Content="0 · packet + 2 (default)"/>
+                                    <ComboBoxItem Content="1 · packet only"/>
+                                    <ComboBoxItem Content="2 · total frame"/>
+                                </ComboBox>
+                            </Grid>
+
+                            <ToggleSwitch x:Name="LogSwitch" Header="Enable log"
+                                          OnContent="Log tab shown" OffContent="Log tab hidden"
+                                          Toggled="LogSwitch_Toggled"/>
+
+                            <Button x:Name="ConnectBtn" Content="Connect" HorizontalAlignment="Stretch"
+                                    Style="{StaticResource AccentButtonStyle}" Click="Connect_Click"/>
+
+                            <TextBlock Text="The app connects automatically on start-up and reconnects if the link drops. Changing a setting reconnects when you close this panel."
+                                       Opacity="0.7" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+
+        <!-- Tabs -->
+        <Pivot x:Name="Tabs" Grid.Row="1" IsEnabled="False">
+
+            <!-- Battery -->
+            <PivotItem Header="Battery">
+                <StackPanel Spacing="16" Margin="0,12,0,0">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource Card}">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Left earbud" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Name="LeftPct" Text="—" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+                                <ProgressBar x:Name="LeftBar" Minimum="0" Maximum="100" Value="0"/>
+                                <TextBlock x:Name="LeftChg" Opacity="0.7"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="1" Style="{StaticResource Card}">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Right earbud" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Name="RightPct" Text="—" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+                                <ProgressBar x:Name="RightBar" Minimum="0" Maximum="100" Value="0"/>
+                                <TextBlock x:Name="RightChg" Opacity="0.7"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2" Style="{StaticResource Card}">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Charging case" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Name="CasePct" Text="—" Style="{StaticResource TitleLargeTextBlockStyle}"/>
+                                <ProgressBar x:Name="CaseBar" Minimum="0" Maximum="100" Value="0"/>
+                                <TextBlock x:Name="CaseChg" Opacity="0.7"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <Button Content="Refresh" Click="RefreshBattery_Click"/>
+                        <ToggleSwitch x:Name="AutoRefresh" OnContent="Auto-refresh every 30 s"
+                                      OffContent="Auto-refresh every 30 s" Toggled="AutoRefresh_Toggled"/>
+                    </StackPanel>
+                </StackPanel>
+            </PivotItem>
+
+            <!-- Noise control -->
+            <PivotItem Header="Noise control">
+                <ScrollViewer>
+                    <Grid Margin="0,12,0,0" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource Card}" VerticalAlignment="Top">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Mode" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <RadioButtons x:Name="AncModes" SelectionChanged="AncModes_SelectionChanged">
+                                    <RadioButton Content="Off (normal)" Tag="1"/>
+                                    <RadioButton Content="Transparency" Tag="2"/>
+                                    <RadioButton Content="Noise cancellation · Light" Tag="16"/>
+                                    <RadioButton Content="Noise cancellation · Medium" Tag="4"/>
+                                    <RadioButton Content="Noise cancellation · Strong" Tag="8"/>
+                                    <RadioButton Content="Noise cancellation · Smart / adaptive" Tag="32"/>
+                                </RadioButtons>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Button Content="Read current status" Click="ReadState_Click"/>
+                                    <TextBlock x:Name="AncStatusText" VerticalAlignment="Center" Opacity="0.7"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="1" Style="{StaticResource Card}" VerticalAlignment="Top">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Audio enhancements" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ToggleSwitch x:Name="WindSwitch" Header="Wind noise reduction" Tag="26" Toggled="Feature_Toggled"/>
+                                <ToggleSwitch x:Name="GameSwitch" Header="Low-latency game mode" Tag="6" Toggled="Feature_Toggled"/>
+                                <TextBlock Text="State is read live from the earbuds when you connect and after every change."
+                                           Opacity="0.7" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ScrollViewer>
+            </PivotItem>
+
+            <!-- Touch gestures -->
+            <PivotItem Header="Touch gestures">
+                <ScrollViewer>
+                    <StackPanel Spacing="16" Margin="0,12,0,0">
+                        <Border Style="{StaticResource Card}">
+                            <Grid x:Name="GestureGrid"/>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Presets:" VerticalAlignment="Center"/>
+                            <Button Content="Default" Tag="Default" Click="Preset_Click"/>
+                            <Button Content="Media" Tag="Media" Click="Preset_Click"/>
+                            <Button Content="Volume" Tag="Volume" Click="Preset_Click"/>
+                            <Button Content="Gaming" Tag="Gaming" Click="Preset_Click"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Button Content="Read from earbuds" Click="ReadGestures_Click"/>
+                            <Button Content="Apply changes" Style="{StaticResource AccentButtonStyle}"
+                                    Click="ApplyGestures_Click"/>
+                        </StackPanel>
+                        <TextBlock Text="Presets only fill the grid; press Apply to send. Slots left on “leave unchanged” keep their current value."
+                                   Opacity="0.7"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+            <!-- Log -->
+            <PivotItem x:Name="LogTab" Header="Log">
+                <Grid Margin="0,12,0,0" RowSpacing="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBox x:Name="LogBox" IsReadOnly="True" AcceptsReturn="True"
+                             TextWrapping="NoWrap" FontFamily="Consolas" MinHeight="260"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                    <Button Grid.Row="1" Content="Clear" Click="ClearLog_Click"/>
+                </Grid>
+            </PivotItem>
+        </Pivot>
+
+        <!-- Status -->
+        <Grid Grid.Row="2" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ProgressRing x:Name="Busy" Width="24" Height="24" IsActive="False"/>
+            <InfoBar x:Name="StatusBar" Grid.Column="1" IsOpen="True" IsClosable="False"
+                     Severity="Informational" Message="Select your earbuds and press Connect."/>
+        </Grid>
+    </Grid>
+    </Grid>
+</Window>
