@@ -24,9 +24,12 @@ Visual Studio 2022: install the "Windows application development" workload, open
 folder/csproj, choose the x64 platform and press F5.
 
 ## Releases
-Push a version tag such as `v1.0.0` to build a self-contained x64 ZIP. The GitHub
-Action uploads the ZIP as a workflow artifact and attaches it to the corresponding
-GitHub Release:
+Every push to `master` builds a self-contained x64 ZIP. The GitHub Action uploads
+the ZIP as a workflow artifact and attaches it to a new GitHub Release with an
+automatically generated tag such as `build-42`.
+
+To create a manually versioned release instead, push a version tag such as `v1.0.0`
+after changing the workflow trigger from `master` to tags:
 
     git tag v1.0.0
     git push origin v1.0.0
