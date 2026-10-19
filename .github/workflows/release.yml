@@ -1,0 +1,48 @@
+name: Build and release
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.x"
+
+      - name: Publish self-contained x64 build
+        run: >
+          dotnet publish RealmeBuds.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          --output publish
+          -p:Platform=x64
+
+      - name: Create release archive
+        shell: pwsh
+        run: Compress-Archive -Path publish\* -DestinationPath RealmeBuds-${{ github.ref_name }}-win-x64.zip
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: RealmeBuds-${{ github.ref_name }}-win-x64
+          path: RealmeBuds-${{ github.ref_name }}-win-x64.zip
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: RealmeBuds-${{ github.ref_name }}-win-x64.zip

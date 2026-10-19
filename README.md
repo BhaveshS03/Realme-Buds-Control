@@ -8,6 +8,9 @@ Native WinUI 3 front-end for Realme / OPPO earbuds: battery, noise control
 - .NET 8 SDK (https://dotnet.microsoft.com/download)
 - Earbuds already paired *and connected* to this PC
 
+## Tested devices
+- Realme T310
+
 ## Build & run
     cd RealmeBuds
     dotnet run -p:Platform=x64
@@ -19,6 +22,14 @@ Or build a release exe:
 
 Visual Studio 2022: install the "Windows application development" workload, open the
 folder/csproj, choose the x64 platform and press F5.
+
+## Releases
+Push a version tag such as `v1.0.0` to build a self-contained x64 ZIP. The GitHub
+Action uploads the ZIP as a workflow artifact and attaches it to the corresponding
+GitHub Release:
+
+    git tag v1.0.0
+    git push origin v1.0.0
 
 ## Using it
 1. Pick your earbuds in the device list and press **Connect**. The default connection mode, **Auto**, finds the
