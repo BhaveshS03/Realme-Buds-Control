@@ -36,11 +36,4 @@ after changing the workflow trigger from `master` to tags:
 
 ## Using it
 1. Pick your earbuds in the device list and press **Connect**. The default connection mode, **Auto**, finds the
-   Bluetooth COM port Windows created for those earbuds (the same transport the Python tools use) and opens it.
-2. If Windows has no COM port for the earbuds, the app falls back to an RFCOMM socket and lets Windows locate the
-   Serial Port service itself (no channel scanning). You can also add an *Outgoing* COM port yourself:
-   Settings > Bluetooth & devices > Devices > More Bluetooth settings > COM Ports > Add.
-3. You can also pick a specific COM port, or force the RFCOMM socket, in the **Connection** box.
-4. Frame length mode 0 (packet + 2) is confirmed correct; the other modes are only for debugging.
-   Turn on **Enable log** in the connection settings (gear icon) to show a **Log** tab with raw TX/RX hex.
-5. Gesture changes read the current gestures first and send all six slots, like the Python tool.
+   Bluetooth COM port Windows created for those earbuds.
