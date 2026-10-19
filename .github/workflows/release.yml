@@ -21,14 +21,28 @@ jobs:
         with:
           dotnet-version: "8.x"
 
-      - name: Publish self-contained x64 build
+      - name: Publish x64 build using Windows runtimes
         run: >
           dotnet publish RealmeBuds.csproj
           --configuration Release
           --runtime win-x64
-          --self-contained true
+          --self-contained false
           --output publish
           -p:Platform=x64
+          -p:WindowsAppSDKSelfContained=false
+          -p:SatelliteResourceLanguages=en-US
+          -p:DebugType=None
+          -p:DebugSymbols=false
+
+      - name: Keep only English resources
+        shell: pwsh
+        run: |
+          Get-ChildItem publish -Directory |
+            Where-Object {
+              $_.Name -match '^[a-z]{2,3}[-_][A-Za-z0-9-]+$' -and
+              $_.Name -notmatch '^en[-_]us$'
+            } |
+            Remove-Item -Recurse -Force
 
       - name: Create release archive
         shell: pwsh
