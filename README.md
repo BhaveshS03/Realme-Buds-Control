@@ -1,6 +1,6 @@
-# Realme Buds (WinUI 3)
+# Realme Buds
 
-Native WinUI 3 front-end for Realme / OPPO earbuds: battery, noise control
+Native WinUI front-end for Realme / OPPO earbuds: battery, noise control
 (ANC / transparency / enhance voices / wind reduction / game mode) and touch gestures.
 
 ## Requirements
