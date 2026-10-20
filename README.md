@@ -3,6 +3,9 @@
 Native WinUI front-end for Realme / OPPO earbuds: battery, noise control
 (ANC / transparency / enhance voices / wind reduction / game mode) and touch gestures.
 
+<img width="1423" height="731" alt="{B1AD7212-B236-45B9-82EB-87AC29095F2B}" src="https://github.com/user-attachments/assets/fbcb2fdf-2665-4ed1-8ef9-1dfa7fa9f439" />
+
+
 ## Requirements
 - Windows 10 1809+ / Windows 11
 - .NET 8 Desktop Runtime (https://dotnet.microsoft.com/download/dotnet/8.0)
