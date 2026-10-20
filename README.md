@@ -6,7 +6,6 @@ Native WinUI 3 front-end for Realme / OPPO earbuds: battery, noise control
 ## Requirements
 - Windows 10 1809+ / Windows 11
 - .NET 8 Desktop Runtime (https://dotnet.microsoft.com/download/dotnet/8.0)
-- Windows App SDK Runtime (https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads)
 - Earbuds already paired *and connected* to this PC
 
 ## Tested devices
@@ -32,9 +31,9 @@ folder/csproj, choose the x64 platform and press F5.
 - `App.xaml`, `App.xaml.cs` - Application startup and resources
 
 ## Releases
-Every push to `master` builds a small x64 ZIP that uses the installed Windows and
-Windows App SDK runtimes. The GitHub Action uploads the ZIP as a workflow artifact
-and attaches it to a new GitHub Release with an automatically generated tag such as
+Every push to `master` builds a self-contained x64 single-file ZIP. The GitHub Action
+uploads it as a workflow artifact and attaches it to a new GitHub Release with an
+automatically generated tag such as
 `build-42`.
 
 To create a manually versioned release instead, push a version tag such as `v1.0.0`

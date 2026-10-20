@@ -21,28 +21,33 @@ jobs:
         with:
           dotnet-version: "8.x"
 
-      - name: Publish x64 build using Windows runtimes
+      - name: Publish self-contained x64 single-file build
         run: >
           dotnet publish RealmeBuds.csproj
           --configuration Release
           --runtime win-x64
-          --self-contained false
+          --self-contained true
           --output publish
           -p:Platform=x64
-          -p:WindowsAppSDKSelfContained=false
+          -p:WindowsAppSDKSelfContained=true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
           -p:SatelliteResourceLanguages=en-US
           -p:DebugType=None
           -p:DebugSymbols=false
 
-      - name: Keep only English resources
+      - name: Verify single-file output
         shell: pwsh
         run: |
-          Get-ChildItem publish -Directory |
-            Where-Object {
-              $_.Name -match '^[a-z]{2,3}[-_][A-Za-z0-9-]+$' -and
-              $_.Name -notmatch '^en[-_]us$'
-            } |
-            Remove-Item -Recurse -Force
+          $executables = @(Get-ChildItem publish -Filter *.exe -File)
+          if ($executables.Count -ne 1 -or $executables[0].Name -ne "RealmeBuds.exe") {
+            throw "Expected exactly one RealmeBuds.exe in the publish output."
+          }
+          Get-ChildItem publish -File |
+            Where-Object { $_.Name -ne "RealmeBuds.exe" } |
+            Remove-Item -Force
+          Get-ChildItem publish -Directory | Remove-Item -Recurse -Force
 
       - name: Create release archive
         shell: pwsh
