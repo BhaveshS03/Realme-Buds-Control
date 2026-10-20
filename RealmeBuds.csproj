@@ -7,6 +7,7 @@
     <AssemblyName>RealmeBuds</AssemblyName>
     <Title>Realme Buds</Title>
     <Product>Realme Buds</Product>
+    <ApplicationIcon>Assets\realme-buds.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
     <Platform Condition="'$(Platform)' == '' Or '$(Platform)' == 'AnyCPU'">x64</Platform>

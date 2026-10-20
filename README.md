@@ -24,6 +24,13 @@ Or build a release exe:
 Visual Studio 2022: install the "Windows application development" workload, open the
 folder/csproj, choose the x64 platform and press F5.
 
+## Project structure
+- `UI\` - WinUI window and its XAML code-behind
+- `Services\` - Earbud protocol client, transports, and COM-port discovery
+- `Configuration\` - Persisted application settings
+- `Assets\` - Images and other application assets, including light and dark theme logos
+- `App.xaml`, `App.xaml.cs` - Application startup and resources
+
 ## Releases
 Every push to `master` builds a small x64 ZIP that uses the installed Windows and
 Windows App SDK runtimes. The GitHub Action uploads the ZIP as a workflow artifact

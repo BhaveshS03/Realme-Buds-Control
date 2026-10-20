@@ -42,6 +42,8 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        RootGrid.ActualThemeChanged += (_, _) => UpdateThemeIcon();
+        UpdateThemeIcon();
         Title = "Realme Buds";
         SystemBackdrop = new MicaBackdrop();
 
@@ -117,6 +119,13 @@ public sealed partial class MainWindow : Window
         AutoRefresh.IsOn = true;      // starts the 30 s battery / liveness timer
         _reconnectTimer.Start();
         _ = InitAsync();
+    }
+
+    private void UpdateThemeIcon()
+    {
+        bool dark = RootGrid.ActualTheme == ElementTheme.Dark;
+        LightThemeIcon.Visibility = dark ? Visibility.Collapsed : Visibility.Visible;
+        DarkThemeIcon.Visibility = dark ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private async Task InitAsync()
@@ -391,7 +400,7 @@ public sealed partial class MainWindow : Window
             var (pct, bar, chg) = _bat[e.Device];
             if (e.Percent is int p)
             {
-                pct.Text = $"{p}%";
+                pct.Text = e.Device == 3 && p == 0 ? "—" : $"{p}%";
                 bar.Value = p;
                 chg.Text = e.Charging ? "⚡ Charging" : "";
             }
